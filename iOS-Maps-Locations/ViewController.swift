@@ -38,6 +38,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         
         
+        
+        
         //A concrete annotation object tied to the specified point on the map | Annotation
         let annotation = MKPointAnnotation()
         
@@ -51,15 +53,51 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         //Add map annotation | MKPointAnnotation( )
         map.addAnnotation(annotation)
- 
         
         
         
         
         
+        
+        //A concrete subclass of UIGestureRecognizer that looks for long-press gestures
+        let uilpgr = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.longpress(gestureRecognizer:)))
+        
+        //The minimum period fingers must press on the view for the gesture to be recognized.
+        uilpgr.minimumPressDuration = 0.5
+        
+        //Attaches a gesture recognizer to the view.
+        map.addGestureRecognizer(uilpgr)
+        
+    }
+    
+    //Function longpress UIGestureRecognizer
+    @objc func longpress(gestureRecognizer: UIGestureRecognizer) {
+        
+        //Returns the point computed as the location in a given view of the gesture represented by the receiver | touchPoint
+        let touchPoint = gestureRecognizer.location(in: self.map)
+        
+        //Converts a point in the specified view’s coordinate system to a map coordinate | map.convert
+        let coordinate = map.convert(touchPoint, toCoordinateFrom: self.map)
+        
+        //Add map annotation | MKPointAnnotation( )
+        let annotation = MKPointAnnotation()
+        
+        //Annotation coordinate | coordinates object
+        annotation.coordinate = coordinate
+        
+        //Annotation title
+        annotation.title = "NewPlace"
+        //Annotation subtitle
+        annotation.subtitle = "Might Visit One Day"
+        //Adds the specified annotation to the map view
+        map.addAnnotation(annotation)
+        
+    }
+}
+
 
 ////MKMapView Setup Guides
-        
+
 //        //A latitude or longitude value specified in degrees | Map View Level
 //        let latitude: CLLocationDegrees = 40.8
 //        let longitude: CLLocationDegrees = -73.9
@@ -79,7 +117,3 @@ class ViewController: UIViewController, MKMapViewDelegate {
 //
 //        //Changes the currently visible region and optionally animates the change | Set map region
 //        map.setRegion(region, animated: true)
-        
-    }
-}
-
